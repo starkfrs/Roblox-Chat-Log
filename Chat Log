@@ -1,0 +1,34 @@
+--[[WARNING!!! MAKE SURE THIS MODULE IS IN SERVER STORAGE OR SERVER SCRIPT SERVICE]]
+
+local url = "https://hooks.hyra.io/" -- Insert your Discord Webhook Here
+local http = game:GetService("HttpService")
+local webhookService = require(script.WebhookService)
+
+game.Players.PlayerAdded:Connect(function(player)
+	player.Chatted:Connect(function(msg)
+		local data = {
+			['embeds'] = {{
+				['title'] = player.name .. " Player Has Chatted!",
+				['description'] = "**Player Chatted: **" .. msg, --This is the message that will come through
+				['color'] = 082888,
+				['url'] = "https://www.roblox.com/users/".. player.UserId .. "/profile", -- This will make a hyperlink to the persons roblox!
+				
+				['fields'] = {
+					{
+						['name'] = "Account Age: ", -- The age of the account
+						['value'] = player.AccountAge .. " Days Old",
+						['inline'] = true
+					},
+					{
+						['name'] = "User Id; ", -- The users ID
+						['value'] = player.UserId,
+						['inline'] = true
+					}
+				}
+			}}
+		}
+		
+		local finaldata = http:JSONEncode(data)
+		http:PostAsync(url, finaldata)
+	end)
+end)
